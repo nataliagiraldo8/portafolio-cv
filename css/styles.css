@@ -45,7 +45,7 @@ ul{padding-left:1.2rem}
 .v-contact li{margin-bottom:6px}
 .bar{margin-bottom:10px;font-size:.82rem}
 .bar i{display:block;height:7px;border-radius:9px;background:rgba(255,255,255,.14);margin-top:4px;position:relative;overflow:hidden}
-.bar i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:linear-gradient(90deg,var(--violet),var(--mint));border-radius:9px;animation:grow 1s ease-out both}
+.bar i::after{content:"";position:absolute;top:0;bottom:0;left:0;width:var(--w);background:linear-gradient(90deg,var(--violet),var(--mint));border-radius:9px;animation:grow 1s ease-out both}
 @keyframes grow{from{width:0}}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips span{font-size:.72rem;background:rgba(55,217,173,.15);color:#d8fff3;padding:3px 9px;border-radius:999px}
@@ -81,16 +81,18 @@ ul{padding-left:1.2rem}
 @media (prefers-reduced-motion:reduce){.bar i::after{animation:none}.btn-pdf,.tab{transition:none}}
 
 /* Modo PDF: ancho A4 fijo, ignora el tamaño de pantalla */
-.pdf-wrap{position:fixed;left:-10000px;top:0;width:794px}
+.pdf-wrap{position:fixed;left:0;top:0;width:794px;z-index:-1;background:#fff}
 .sheet.pdf-mode{width:794px;max-width:none;border-radius:0;box-shadow:none}
 .sheet.pdf-mode .v-grid{grid-template-columns:260px 1fr}
 .sheet.pdf-mode .proj{grid-template-columns:1fr 1fr}
 .sheet.pdf-mode .bar i::after{animation:none}
 .sheet-ats.pdf-mode{padding:0}
 
+@page{size:A4;margin:12mm}
 @media print{
   .toolbar{display:none}.stage{padding:0}body{background:#fff}
   .sheet{box-shadow:none;border-radius:0;max-width:none}
+  .sheet-ats{padding:0}.sheet-ats .item,.sheet-ats li,.sheet-ats h2{break-inside:avoid}.sheet-ats h2{break-after:avoid}
   .sheet[hidden]{display:none}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }

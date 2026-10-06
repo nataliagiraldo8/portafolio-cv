@@ -1,3 +1,4 @@
+
 /* ====== DATOS: edita solo este objeto ====== */
 const CV = {
   nombre: "Alex Morales",
@@ -114,27 +115,66 @@ document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () =>
 }));
 
 /* ====== DESCARGA PDF ====== */
-$("#btn-pdf").addEventListener("click", async () => {
-  const btn = $("#btn-pdf");
-  if (typeof html2pdf === "undefined") { window.print(); return; }
-  btn.disabled = true; btn.textContent = "Generando PDF...";
-  // Clon con ancho A4 fijo para que el PDF sea igual en celular y escritorio
+const fileName = () => `CV_${CV.nombre.replace(/\s+/g, "_")}_${active === "ats" ? "ATS" : "Visual"}`;
+
+// ATS: se imprime como PDF nativo para conservar el texto seleccionable (los ATS leen texto, no imágenes)
+function pdfATS() {
+  const old = document.title;
+  document.title = fileName();
+  window.print();
+  setTimeout(() => (document.title = old), 1000);
+}
+
+// Visual: se captura como imagen y se reparte en páginas A4 sin cortar bloques a la mitad
+async function pdfVisual() {
+  await document.fonts.ready;
+  window.scrollTo(0, 0);
   const wrap = document.createElement("div");
   wrap.className = "pdf-wrap";
-  const clone = $("#" + active).cloneNode(true);
-  clone.hidden = false; clone.classList.add("pdf-mode");
+  const clone = $("#visual").cloneNode(true);
+  clone.hidden = false; clone.removeAttribute("id"); clone.classList.add("pdf-mode");
   wrap.appendChild(clone); document.body.appendChild(wrap);
-  const file = `CV_${CV.nombre.replace(/\s+/g, "_")}_${active === "ats" ? "ATS" : "Visual"}.pdf`;
   try {
-    await html2pdf().set({
-      margin: active === "ats" ? [10, 10, 10, 10] : 0,
-      filename: file,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, windowWidth: 794 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"], avoid: [".item", ".t-item", "li"] }
-    }).from(clone).save();
-  } finally {
-    wrap.remove(); btn.disabled = false; btn.textContent = "Descargar PDF";
-  }
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const W = clone.offsetWidth, pageH = W * 297 / 210;
+    const top = clone.getBoundingClientRect().top;
+    const edges = [...clone.querySelectorAll(".t-item, .proj, .v-main > h2, .v-main > p, .certs")]
+      .map(el => Math.round(el.getBoundingClientRect().bottom - top)).sort((a, b) => a - b);
+    const canvas = await html2canvas(clone, { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollX: 0, scrollY: 0, windowWidth: W });
+    const k = canvas.width / W, total = clone.offsetHeight;
+    const pdf = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
+    let start = 0, first = true;
+    while (start < total - 1) {
+      let end = Math.min(start + pageH, total);
+      if (end < total) {
+        const fit = edges.filter(e => e > start + pageH * 0.5 && e <= end);
+        if (fit.length) end = fit[fit.length - 1];
+      }
+      const slice = document.createElement("canvas");
+      slice.width = canvas.width; slice.height = Math.round((end - start) * k);
+      const ctx = slice.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, slice.width, slice.height);
+      ctx.drawImage(canvas, 0, Math.round(start * k), canvas.width, slice.height, 0, 0, canvas.width, slice.height);
+      if (!first) pdf.addPage();
+      pdf.setFillColor(23, 21, 59);                       // continúa la barra lateral hasta el pie
+      pdf.rect(0, 0, 210 * 260 / W, 297, "F");
+      pdf.addImage(slice.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 210, (end - start) / pageH * 297);
+      first = false; start = end;
+    }
+    pdf.save(fileName() + ".pdf");
+  } finally { wrap.remove(); }
+}
+
+$("#btn-pdf").addEventListener("click", async () => {
+  const btn = $("#btn-pdf");
+  if (active === "ats") return pdfATS();
+  btn.disabled = true; btn.textContent = "Generando PDF...";
+  try {
+    if (typeof html2canvas === "undefined" || !window.jspdf) throw new Error("Librerías no cargadas");
+    await pdfVisual();
+  } catch (err) {
+    console.error(err);
+    alert("No se pudo generar el PDF automáticamente. Se abrirá el diálogo de impresión: elige 'Guardar como PDF'.");
+    window.print();
+  } finally { btn.disabled = false; btn.textContent = "Descargar PDF"; }
 });
