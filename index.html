@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoja de vida | Alex Morales, Desarrollador Full Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="toolbar">
+  <div class="toolbar-inner">
+    <div class="tabs" role="tablist" aria-label="Formato de hoja de vida">
+      <button class="tab active" role="tab" aria-selected="true" data-target="ats">Formato ATS</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="visual">Formato visual</button>
+    </div>
+    <button id="btn-pdf" class="btn-pdf">Descargar PDF</button>
+  </div>
+  <p id="hint" class="hint">Texto plano y una sola columna: lo leen sin errores los sistemas de selección.</p>
+</header>
+
+<main class="stage">
+  <article id="ats" class="sheet sheet-ats"></article>
+  <article id="visual" class="sheet sheet-visual" hidden></article>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
