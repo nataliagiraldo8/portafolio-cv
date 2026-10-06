@@ -1,16 +1,15 @@
-
 /* ====== DATOS: edita solo este objeto ====== */
 const CV = {
-  nombre: "Alex Morales",
-  titulo: "Desarrollador de Software Full Stack",
+  nombre: "Natalia Giraldo Rojas",
+  titulo: "Técnica profesional de paginas web",
   contacto: {
-    email: "alex.morales@correo.com",
-    tel: "+57 300 123 4567",
-    ubicacion: "Bogotá, Colombia",
-    linkedin: "linkedin.com/in/alexmorales",
-    github: "github.com/alexmorales"
+    email: "natagiraldo527@gmail.com",
+    tel: "+57 314 646 6284",
+    ubicacion: "Manizales, Colombia",
+    linkedin: "linkedin.com/in/natagiraldo",
+    github: "github.com/nataliagiraldo8"
   },
-  resumen: "Desarrollador Full Stack con 5 años de experiencia construyendo aplicaciones web escalables con JavaScript, TypeScript, React y Node.js. Reduje tiempos de carga en 40% y lideré la migración de un monolito a microservicios en AWS. Trabajo en equipos ágiles y me enfoco en código limpio, pruebas y entrega continua.",
+  resumen: "Tecnica profesional de paginas web, manejo python, html y javascript. Trabajo en equipos ágiles y me enfoco en código limpio, pruebas y entrega continua.",
   habilidades: {
     "Lenguajes": ["JavaScript", "TypeScript", "Python", "SQL", "HTML5", "CSS3"],
     "Frontend": ["React", "Next.js", "Vue.js", "Tailwind CSS", "Redux"],
@@ -20,34 +19,24 @@ const CV = {
   },
   niveles: [["JavaScript / TypeScript", 92], ["React / Next.js", 90], ["Node.js", 85], ["Bases de datos", 80], ["AWS / Docker", 72]],
   experiencia: [
-    { cargo: "Desarrollador Full Stack Senior", empresa: "TechNova S.A.S.", periodo: "Mar 2023 - Actualidad",
-      logros: ["Lideré la migración de un monolito a microservicios en AWS, reduciendo costos de infraestructura en 30%.",
-               "Diseñé APIs REST y GraphQL que atienden más de 200.000 solicitudes diarias.",
-               "Implementé pipelines CI/CD con GitHub Actions y bajé el tiempo de despliegue de 40 a 8 minutos.",
-               "Mentoría a 4 desarrolladores junior y revisión semanal de código."] },
-    { cargo: "Desarrollador Frontend", empresa: "Pixel Labs", periodo: "Ene 2021 - Feb 2023",
-      logros: ["Construí una plataforma de e-commerce en React que aumentó la conversión en 18%.",
-               "Optimicé el rendimiento web (Core Web Vitals) y reduje el tiempo de carga en 40%.",
-               "Alcancé 85% de cobertura de pruebas con Jest y Cypress."] },
-    { cargo: "Desarrollador Junior", empresa: "Soluciones Digitales Ltda.", periodo: "Jun 2019 - Dic 2020",
-      logros: ["Desarrollé módulos de facturación en Node.js y PostgreSQL para 50 clientes.",
-               "Automaticé reportes con Python que ahorraron 15 horas semanales al equipo."] }
+    { cargo: "Tecnica profesional de paginas web", empresa: "TechNova S.A.S.", periodo: "Mar 2026 - Actualidad",
+      logros: ["Programe paginas web para emprendimientos de zapatos, regalos y entre otros proyectos."] }
   ],
-  proyectos: [
-    { nombre: "TaskFlow", desc: "Gestor de tareas colaborativo en tiempo real con WebSockets, usado por más de 2.000 usuarios.", tech: "React, Node.js, MongoDB" },
-    { nombre: "FinTrack", desc: "Panel de finanzas personales con gráficos interactivos y autenticación segura con JWT.", tech: "Next.js, PostgreSQL, Docker" }
-  ],
-  educacion: [{ titulo: "Ingeniería de Sistemas", inst: "Universidad Nacional de Colombia", periodo: "2014 - 2019" }],
+  proyectos: [], // opcional: { nombre, desc, tech }. Si queda vacío, la sección no se muestra
+  educacion: [{ titulo: "Tecnica profesional de paginas web", inst: "Universidad de caldas", periodo: "2024 - 2025" }],
   certificaciones: ["AWS Certified Cloud Practitioner (2023)", "Meta Front-End Developer Professional Certificate (2022)", "Scrum Fundamentals Certified (2021)"],
-  idiomas: [["Español", "Nativo"], ["Inglés", "Avanzado (B2)"]]
+  idiomas: [["Español", "Nativo"], ["Inglés", "Avanzado (B1)"]]
 };
 
 /* ====== RENDER ====== */
 const $ = (s) => document.querySelector(s);
 const c = CV.contacto;
-const jobsATS = CV.experiencia.map(e => `
+const list = (a) => (Array.isArray(a) ? a : []);
+const proyectos = list(CV.proyectos), certs = list(CV.certificaciones);
+
+const jobsATS = list(CV.experiencia).map(e => `
   <div class="item"><h3>${e.cargo} - ${e.empresa}</h3><p class="meta">${e.periodo}</p>
-  <ul>${e.logros.map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("");
+  <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("");
 
 $("#ats").innerHTML = `
   <h1>${CV.nombre}</h1>
@@ -57,12 +46,11 @@ $("#ats").innerHTML = `
   <h2>Habilidades Técnicas</h2>
   <ul class="plain">${Object.entries(CV.habilidades).map(([k, v]) => `<li><strong>${k}:</strong> ${v.join(", ")}</li>`).join("")}</ul>
   <h2>Experiencia Laboral</h2>${jobsATS}
-  <h2>Proyectos</h2>
-  ${CV.proyectos.map(p => `<div class="item"><h3>${p.nombre}</h3><p>${p.desc} Tecnologías: ${p.tech}.</p></div>`).join("")}
+  ${proyectos.length ? `<h2>Proyectos</h2>${proyectos.map(p => `<div class="item"><h3>${p.nombre}</h3><p>${p.desc} Tecnologías: ${p.tech}.</p></div>`).join("")}` : ""}
   <h2>Educación</h2>
-  ${CV.educacion.map(e => `<div class="item"><h3>${e.titulo} - ${e.inst}</h3><p class="meta">${e.periodo}</p></div>`).join("")}
-  <h2>Certificaciones</h2><ul>${CV.certificaciones.map(x => `<li>${x}</li>`).join("")}</ul>
-  <h2>Idiomas</h2><p>${CV.idiomas.map(i => `${i[0]}: ${i[1]}`).join(" | ")}</p>`;
+  ${list(CV.educacion).map(e => `<div class="item"><h3>${e.titulo} - ${e.inst}</h3><p class="meta">${e.periodo}</p></div>`).join("")}
+  ${certs.length ? `<h2>Certificaciones</h2><ul>${certs.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
+  <h2>Idiomas</h2><p>${list(CV.idiomas).map(i => `${i[0]}: ${i[1]}`).join(" | ")}</p>`;
 
 const initials = CV.nombre.split(" ").map(w => w[0]).join("");
 $("#visual").innerHTML = `
@@ -74,24 +62,24 @@ $("#visual").innerHTML = `
         <li>${c.email}</li><li>${c.tel}</li><li>${c.ubicacion}</li><li>${c.linkedin}</li><li>${c.github}</li>
       </ul>
       <h2>Nivel técnico</h2>
-      ${CV.niveles.map(([n, v]) => `<div class="bar"><span>${n}</span><i style="--w:${v}%"></i></div>`).join("")}
+      ${list(CV.niveles).map(([n, v]) => `<div class="bar"><span>${n}</span><i style="--w:${v}%"></i></div>`).join("")}
       <h2>Stack</h2>
       <div class="chips">${Object.values(CV.habilidades).flat().map(s => `<span>${s}</span>`).join("")}</div>
       <h2>Idiomas</h2>
-      <ul class="v-contact">${CV.idiomas.map(i => `<li>${i[0]}: ${i[1]}</li>`).join("")}</ul>
+      <ul class="v-contact">${list(CV.idiomas).map(i => `<li>${i[0]}: ${i[1]}</li>`).join("")}</ul>
     </aside>
     <section class="v-main">
       <div class="v-head"><h1>${CV.nombre}</h1><p>${CV.titulo}</p></div>
       <h2>Perfil</h2><p>${CV.resumen}</p>
       <h2>Experiencia</h2>
-      <div class="timeline">${CV.experiencia.map(e => `
+      <div class="timeline">${list(CV.experiencia).map(e => `
         <div class="t-item"><h3>${e.cargo}</h3><p class="meta">${e.empresa} · ${e.periodo}</p>
-        <ul>${e.logros.map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("")}</div>
-      <h2>Proyectos destacados</h2>
-      <div class="proj">${CV.proyectos.map(p => `<div><h3>${p.nombre}</h3><p>${p.desc}</p><small>${p.tech}</small></div>`).join("")}</div>
+        <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("")}</div>
+      ${proyectos.length ? `<h2>Proyectos destacados</h2>
+      <div class="proj">${proyectos.map(p => `<div><h3>${p.nombre}</h3><p>${p.desc}</p><small>${p.tech}</small></div>`).join("")}</div>` : ""}
       <h2>Formación</h2>
-      ${CV.educacion.map(e => `<p><strong>${e.titulo}</strong><br>${e.inst}, ${e.periodo}</p>`).join("")}
-      <ul class="certs">${CV.certificaciones.map(x => `<li>${x}</li>`).join("")}</ul>
+      ${list(CV.educacion).map(e => `<p><strong>${e.titulo}</strong><br>${e.inst}, ${e.periodo}</p>`).join("")}
+      ${certs.length ? `<ul class="certs">${certs.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
     </section>
   </div>`;
 
