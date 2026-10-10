@@ -20,7 +20,7 @@ const CV = {
   proyectos: [],
   educacion: [{ titulo: "Técnica profesional en páginas web", inst: "Universidad de Caldas", periodo: "2024 - 2025" }],
   certificaciones: [],
-  idiomas: [["Español", "Nativo"], ["Inglés", "Basico (A2)"]]
+  idiomas: [["Español", "Nativo"], ["Inglés", "Avanzado (B1)"]]
 };
 
 /* ====== RENDER ====== */
