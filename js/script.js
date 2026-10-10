@@ -1,7 +1,8 @@
 /* ====== DATOS: edita solo este objeto ====== */
 const CV = {
   nombre: "Natalia Giraldo Rojas",
-  titulo: "Técnica profesional de paginas web",
+  titulo: "Técnica profesional en páginas web",
+  foto: window.FOTO_DATA || "img/natalia-giraldo-rojas.jpg",
   contacto: {
     email: "natagiraldo527@gmail.com",
     tel: "+57 314 646 6284",
@@ -9,34 +10,25 @@ const CV = {
     linkedin: "linkedin.com/in/natagiraldo",
     github: "github.com/nataliagiraldo8"
   },
-  resumen: "Tecnica profesional de paginas web, manejo python, html y javascript. Trabajo en equipos ágiles y me enfoco en código limpio, pruebas y entrega continua.",
+  resumen: "Técnica profesional en desarrollo de páginas web, en búsqueda de mi primera oportunidad laboral. Manejo Python, HTML, CSS, JavaScript y Git, aprendo rápido y me gusta trabajar en equipo.",
   habilidades: {
-    "Lenguajes": ["JavaScript", "TypeScript", "Python", "SQL", "HTML5", "CSS3"],
-    "Frontend": ["React", "Next.js", "Vue.js", "Tailwind CSS", "Redux"],
-    "Backend": ["Node.js", "Express", "NestJS", "Django", "REST", "GraphQL"],
-    "Datos y nube": ["PostgreSQL", "MongoDB", "Redis", "AWS", "Docker"],
-    "Herramientas": ["Git", "GitHub Actions", "Jest", "Cypress", "Jira", "Figma"]
+    "Lenguajes": ["Python", "HTML", "CSS", "JavaScript"],
+    "Herramientas": ["Git"]
   },
-  niveles: [["JavaScript / TypeScript", 92], ["React / Next.js", 90], ["Node.js", 85], ["Bases de datos", 80], ["AWS / Docker", 72]],
-  experiencia: [
-    { cargo: "Tecnica profesional de paginas web", empresa: "TechNova S.A.S.", periodo: "Mar 2026 - Actualidad",
-      logros: ["Programe paginas web para emprendimientos de zapatos, regalos y entre otros proyectos."] }
-  ],
-  proyectos: [], // opcional: { nombre, desc, tech }. Si queda vacío, la sección no se muestra
-  educacion: [{ titulo: "Tecnica profesional de paginas web", inst: "Universidad de caldas", periodo: "2024 - 2025" }],
-  certificaciones: ["AWS Certified Cloud Practitioner (2023)", "Meta Front-End Developer Professional Certificate (2022)", "Scrum Fundamentals Certified (2021)"],
-  idiomas: [["Español", "Nativo"], ["Inglés", "Avanzado (B1)"]]
+  niveles: [],
+  experiencia: [],
+  proyectos: [],
+  educacion: [{ titulo: "Técnica profesional en páginas web", inst: "Universidad de Caldas", periodo: "2024 - 2025" }],
+  certificaciones: [],
+  idiomas: [["Español", "Nativo"], ["Inglés", "Basico (A2)"]]
 };
 
 /* ====== RENDER ====== */
 const $ = (s) => document.querySelector(s);
 const c = CV.contacto;
 const list = (a) => (Array.isArray(a) ? a : []);
-const proyectos = list(CV.proyectos), certs = list(CV.certificaciones);
-
-const jobsATS = list(CV.experiencia).map(e => `
-  <div class="item"><h3>${e.cargo} - ${e.empresa}</h3><p class="meta">${e.periodo}</p>
-  <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("");
+const exp = list(CV.experiencia), proyectos = list(CV.proyectos), certs = list(CV.certificaciones), niveles = list(CV.niveles);
+const tech = (p) => (p.tech ? ` Tecnologías: ${p.tech}.` : "");
 
 $("#ats").innerHTML = `
   <h1>${CV.nombre}</h1>
@@ -45,25 +37,26 @@ $("#ats").innerHTML = `
   <h2>Resumen Profesional</h2><p>${CV.resumen}</p>
   <h2>Habilidades Técnicas</h2>
   <ul class="plain">${Object.entries(CV.habilidades).map(([k, v]) => `<li><strong>${k}:</strong> ${v.join(", ")}</li>`).join("")}</ul>
-  <h2>Experiencia Laboral</h2>${jobsATS}
-  ${proyectos.length ? `<h2>Proyectos</h2>${proyectos.map(p => `<div class="item"><h3>${p.nombre}</h3><p>${p.desc} Tecnologías: ${p.tech}.</p></div>`).join("")}` : ""}
+  ${exp.length ? `<h2>Experiencia Laboral</h2>${exp.map(e => `
+    <div class="item"><h3>${e.cargo} - ${e.empresa}</h3><p class="meta">${e.periodo}</p>
+    <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("")}` : ""}
+  ${proyectos.length ? `<h2>Proyectos</h2>${proyectos.map(p => `<div class="item"><h3>${p.nombre}</h3><p>${p.desc}${tech(p)}</p></div>`).join("")}` : ""}
   <h2>Educación</h2>
   ${list(CV.educacion).map(e => `<div class="item"><h3>${e.titulo} - ${e.inst}</h3><p class="meta">${e.periodo}</p></div>`).join("")}
   ${certs.length ? `<h2>Certificaciones</h2><ul>${certs.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
   <h2>Idiomas</h2><p>${list(CV.idiomas).map(i => `${i[0]}: ${i[1]}`).join(" | ")}</p>`;
 
-const initials = CV.nombre.split(" ").map(w => w[0]).join("");
+const initials = CV.nombre.split(" ").slice(0, 2).map(w => w[0]).join("");
 $("#visual").innerHTML = `
   <div class="v-grid">
     <aside class="v-side">
-      <div class="avatar" aria-hidden="true">${initials}</div>
+      <div class="photo"><b>${initials}</b></div>
       <h2>Contacto</h2>
       <ul class="v-contact">
         <li>${c.email}</li><li>${c.tel}</li><li>${c.ubicacion}</li><li>${c.linkedin}</li><li>${c.github}</li>
       </ul>
-      <h2>Nivel técnico</h2>
-      ${list(CV.niveles).map(([n, v]) => `<div class="bar"><span>${n}</span><i style="--w:${v}%"></i></div>`).join("")}
-      <h2>Stack</h2>
+      ${niveles.length ? `<h2>Nivel técnico</h2>${niveles.map(([n, v]) => `<div class="bar"><span>${n}</span><i style="--w:${v}%"></i></div>`).join("")}` : ""}
+      <h2>Habilidades</h2>
       <div class="chips">${Object.values(CV.habilidades).flat().map(s => `<span>${s}</span>`).join("")}</div>
       <h2>Idiomas</h2>
       <ul class="v-contact">${list(CV.idiomas).map(i => `<li>${i[0]}: ${i[1]}</li>`).join("")}</ul>
@@ -71,17 +64,29 @@ $("#visual").innerHTML = `
     <section class="v-main">
       <div class="v-head"><h1>${CV.nombre}</h1><p>${CV.titulo}</p></div>
       <h2>Perfil</h2><p>${CV.resumen}</p>
-      <h2>Experiencia</h2>
-      <div class="timeline">${list(CV.experiencia).map(e => `
+      ${exp.length ? `<h2>Experiencia</h2><div class="timeline">${exp.map(e => `
         <div class="t-item"><h3>${e.cargo}</h3><p class="meta">${e.empresa} · ${e.periodo}</p>
-        <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("")}</div>
-      ${proyectos.length ? `<h2>Proyectos destacados</h2>
-      <div class="proj">${proyectos.map(p => `<div><h3>${p.nombre}</h3><p>${p.desc}</p><small>${p.tech}</small></div>`).join("")}</div>` : ""}
+        <ul>${list(e.logros).map(l => `<li>${l}</li>`).join("")}</ul></div>`).join("")}</div>` : ""}
       <h2>Formación</h2>
-      ${list(CV.educacion).map(e => `<p><strong>${e.titulo}</strong><br>${e.inst}, ${e.periodo}</p>`).join("")}
-      ${certs.length ? `<ul class="certs">${certs.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
+      <div class="timeline">${list(CV.educacion).map(e => `
+        <div class="t-item"><h3>${e.titulo}</h3><p class="meta">${e.inst} · ${e.periodo}</p></div>`).join("")}</div>
+      ${proyectos.length ? `<h2>Proyectos</h2>
+      <div class="proj">${proyectos.map(p => `<div><h3>${p.nombre}</h3><p>${p.desc}</p>${p.tech ? `<small>${p.tech}</small>` : ""}</div>`).join("")}</div>` : ""}
+      ${certs.length ? `<h2>Certificaciones</h2><ul class="certs">${certs.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
     </section>
   </div>`;
+
+/* ====== FOTO (estática, desde carpeta img/) ====== */
+(function loadPhoto() {
+  if (!CV.foto) return;
+  const el = $("#visual .photo"), img = new Image();
+  img.onload = () => {
+    el.classList.add("has-img");
+    el.style.backgroundImage = `linear-gradient(to bottom, rgba(23,21,59,0) 62%, #17153B 100%), url("${CV.foto}")`;
+  };
+  img.onerror = () => console.warn("No se encontró la foto: " + CV.foto + " (se muestran las iniciales)");
+  img.src = CV.foto;
+})();
 
 /* ====== PESTAÑAS ====== */
 let active = "ats";
